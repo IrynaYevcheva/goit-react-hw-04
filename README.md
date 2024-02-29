@@ -16,9 +16,7 @@ Currently, two official plugins are available:
 - npm install modern-normalize
 - change the name of project
 ____________________________
-  FORM
-- npm install formik
-- npm install yup
+- npm install axios
 -
 -->
 
