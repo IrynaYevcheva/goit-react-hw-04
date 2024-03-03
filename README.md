@@ -17,7 +17,10 @@ Currently, two official plugins are available:
 - change the name of project
 ____________________________
 - npm install axios
--
+- npm install react-hot-toast
+- npm install formik
+- npm install yup
+- npm install react-loader-spinner --save
 -->
 
 <!-- to create react vite template:
