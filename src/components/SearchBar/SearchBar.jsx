@@ -1,5 +1,7 @@
 import toast, { Toaster } from 'react-hot-toast';
 import { Field, Form, Formik } from 'formik';
+import styles from './SearchBar.module.css';
+import { IoSearchOutline } from 'react-icons/io5';
 
 export const SearchBar = ({ onSearch }) => {
   return (
@@ -17,17 +19,22 @@ export const SearchBar = ({ onSearch }) => {
         actions.resetForm();
       }}
     >
-      <Form>
-        <Field
-          name="query"
-          type="text"
-          autoComplete="off"
-          autoFocus
-          placeholder="Search images and photos"
-        />
-        <button type="submit">Search</button>
-        <Toaster />
-      </Form>
+      <header className={styles.header}>
+        <Form className={styles.form}>
+          <Field
+            className={styles.input}
+            name="query"
+            type="text"
+            autoComplete="off"
+            autoFocus
+            placeholder="Search images and photos"
+          />
+          <button className={styles.button} type="submit">
+            <IoSearchOutline size={22} />
+          </button>
+          <Toaster />
+        </Form>
+      </header>
     </Formik>
   );
 };

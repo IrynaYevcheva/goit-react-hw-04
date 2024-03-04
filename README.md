@@ -21,6 +21,8 @@ ____________________________
 - npm install formik
 - npm install yup
 - npm install react-loader-spinner --save
+- npm install react-icons
+- npm install --save react-modal
 -->
 
 <!-- to create react vite template:

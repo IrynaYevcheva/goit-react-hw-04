@@ -2,9 +2,11 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+  margin-top: 68px;
 }
 .item {
-  width: calc((100% - 36px) / 4);
-  height: 226px;
+  width: calc((100% - 72px) / 4);
+  overflow: hidden;
 }

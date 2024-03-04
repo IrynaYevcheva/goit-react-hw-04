@@ -5,6 +5,8 @@ import { SearchBar } from '../SearchBar/SearchBar';
 import { ImageGallery } from '../ImageGallery/ImageGallery';
 import { Loader } from '../Loader/Loader';
 import { LoadMoreBtn } from '../LoadMoreBtn/LoadMoreBtn';
+import { ErrorMessage } from '../ErrorMessage/ErrorMessage';
+import { ImageModal } from '../ImageModal/ImageModal';
 
 export default function App() {
   const [query, setQuery] = useState('');
@@ -12,6 +14,9 @@ export default function App() {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [imageInfo, setImageInfo] = useState({});
+  const [totalPageQuery, setTotalPageQuery] = useState(0);
 
   useEffect(() => {
     if (query === '') {
@@ -21,10 +26,11 @@ export default function App() {
       try {
         setIsLoading(true);
         setError(false);
-        const { results } = await fetchImages({ query, page });
+        const { results, total_pages } = await fetchImages({ query, page });
         setImages(prevResults => {
           return [...prevResults, ...results];
         });
+        setTotalPageQuery(total_pages);
       } catch (error) {
         setError(true);
       } finally {
@@ -35,24 +41,53 @@ export default function App() {
   }, [query, page]);
 
   const handleSearch = newQuery => {
+    if (newQuery === query) return;
     setQuery(newQuery);
     setPage(1);
     setImages([]);
+    setError(false);
+    setTotalPageQuery(0);
   };
 
   const handleLoadMore = () => {
     setPage(page + 1);
   };
 
+  const openModal = values => {
+    setIsOpen(true);
+    setImageInfo(values);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+    setImageInfo({});
+  };
+
   return (
-    <div>
+    <div className={styles.wrapper}>
       <SearchBar onSearch={handleSearch} />
-      {error && <p>Oops, something went wrong! Please try again!</p>}
-      {images.length > 0 && <ImageGallery images={images} />}
-      {images.length > 0 && !isLoading && (
+      {!totalPageQuery && error && (
+        <ErrorMessage>
+          Oops, something went wrong! Please try again!
+        </ErrorMessage>
+      )}
+      {!error && totalPageQuery === 0 && query !== '' && (
+        <ErrorMessage>
+          Sorry we didn't find any results matching this search...
+        </ErrorMessage>
+      )}
+      {!error && images.length > 0 && (
+        <ImageGallery images={images} openModal={openModal} />
+      )}
+      {totalPageQuery > 1 && !isLoading && (
         <LoadMoreBtn onClick={handleLoadMore} />
       )}
       {isLoading && <Loader />}
+      <ImageModal
+        modalIsOpen={modalIsOpen}
+        closeModal={closeModal}
+        imageInfo={imageInfo}
+      />
     </div>
   );
 }
