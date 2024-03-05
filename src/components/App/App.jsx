@@ -31,11 +31,11 @@ export default function App() {
         setImages(prevResults => {
           return [...prevResults, ...results];
         });
-        setTotalPageQuery(total_pages);
         if (!results.length) {
           setEmpty(true);
           return;
         }
+        setTotalPageQuery(total_pages);
       } catch (error) {
         setError(true);
       } finally {
@@ -72,7 +72,7 @@ export default function App() {
   return (
     <div className={styles.wrapper}>
       <SearchBar onSearch={handleSearch} />
-      {!error && empty && (
+      {!isLoading && !error && empty && (
         <ErrorMessage>
           Sorry we didn't find any results matching this search...
         </ErrorMessage>
@@ -85,7 +85,7 @@ export default function App() {
       {!error && images.length > 0 && (
         <ImageGallery images={images} openModal={openModal} />
       )}
-      {totalPageQuery > 1 && !isLoading && (
+      {images.length > 0 && totalPageQuery > page && !isLoading && (
         <LoadMoreBtn onClick={handleLoadMore} />
       )}
       {isLoading && <Loader />}
