@@ -17,6 +17,7 @@ export default function App() {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [imageInfo, setImageInfo] = useState({});
   const [totalPageQuery, setTotalPageQuery] = useState(0);
+  const [empty, setEmpty] = useState(false);
 
   useEffect(() => {
     if (query === '') {
@@ -31,6 +32,10 @@ export default function App() {
           return [...prevResults, ...results];
         });
         setTotalPageQuery(total_pages);
+        if (!results.length) {
+          setEmpty(true);
+          return;
+        }
       } catch (error) {
         setError(true);
       } finally {
@@ -47,6 +52,7 @@ export default function App() {
     setImages([]);
     setError(false);
     setTotalPageQuery(0);
+    setEmpty(false);
   };
 
   const handleLoadMore = () => {
@@ -66,14 +72,14 @@ export default function App() {
   return (
     <div className={styles.wrapper}>
       <SearchBar onSearch={handleSearch} />
+      {!error && empty && (
+        <ErrorMessage>
+          Sorry we didn't find any results matching this search...
+        </ErrorMessage>
+      )}
       {!totalPageQuery && error && (
         <ErrorMessage>
           Oops, something went wrong! Please try again!
-        </ErrorMessage>
-      )}
-      {!error && totalPageQuery === 0 && query !== '' && (
-        <ErrorMessage>
-          Sorry we didn't find any results matching this search...
         </ErrorMessage>
       )}
       {!error && images.length > 0 && (
